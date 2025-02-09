@@ -1,0 +1,146 @@
+<% layout("/layouts/boilerplate") %> 
+<div class="row">
+    <div class="col-6 offset-3 mb-2 mt-2">
+<h3><%= listing.tittle %>:</h3>
+<div class="card listing-card">
+    <img src="<%= listing.image.url %>" class="card-img-top " style="height: 33vh;" alt="show_image">
+    <div class="card-body">
+      
+      <p class="card-text">
+        <ul>
+            <li><b><i> owned by:<%= listing.owner.username %></i></b></li>
+            <li><%= listing.description %></li>
+            <li> &#8377; <%= listing.price.toLocaleString('en-IN')%>/night</li>
+            <li><%= listing.location %></li>
+            <li><%= listing.country %></li>
+        </ul>
+      </p>
+     <div class="buttons">
+      <% if (curruser && curruser._id.equals(listing.owner._id)) { %>
+        <a href="/listing/<%= listing._id %>/edit" class="btn edit-btn btn-primary">edit this listing</a>
+    
+    
+        <form method="POST" action="/listing/<%= listing._id %>?_method=DELETE">
+         <button class="btn btn-dark">DELETE</button>
+         </form>
+     
+      <% } %>
+        
+       <form action="/listing">
+        <button class="btn btn-dark">back home</button>
+      </form>
+    </div> 
+    
+    </div>
+  </div>
+<hr>
+  <div class=" mt-2 mb-2">
+    <% if (curruser) { %>
+     
+    
+    <h4>leave a review</h4>
+    <form action="/listing/<%= listing._id %>/reviews" method="POST">
+      
+      <div>
+        <label  for="comment" class="form-label">rating</label>
+      <fieldset class="starability-slot">
+        
+        <input type="radio" id="no-rate" class="input-no-rate" name="reviews[rating]" value="1" checked aria-label="No rating." />
+        <input type="radio" id="first-rate1" name="reviews[rating]" value="1" />
+        <label for="first-rate1" title="Terrible">1 star</label>
+        <input type="radio" id="first-rate2" name="reviews[rating]" value="2" />
+        <label for="first-rate2" title="Not good">2 stars</label>
+        <input type="radio" id="first-rate3" name="reviews[rating]" value="3" />
+        <label for="first-rate3" title="Average">3 stars</label>
+        <input type="radio" id="first-rate4" name="reviews[rating]" value="4" />
+        <label for="first-rate4" title="Very good">4 stars</label>
+        <input type="radio" id="first-rate5" name="reviews[rating]" value="5" />
+        <label for="first-rate5" title="Amazing">5 stars</label>
+      </fieldset>
+      </div>
+      <div>
+        <label  for="comment" class="form-label">comment</label>
+        <textarea class="form-control" name="reviews[comment]" placeholder="add comment" rows="4" required></textarea>
+      </div>
+      <div class="mt-2 mb-2">
+        <button class="btn btn-outline-dark">Submit</button>
+      </div>
+    </form>
+    <hr>
+    <% } %>
+    <% if (listing.reviews.length>0) { %>
+     <h3>all reviews:</h3>
+    <div class="row ">
+     <% for (let review of listing.reviews) {%>
+     
+     <div class="card col-5 mb-3 ms-3" >
+      <div class="card-body">
+        <h5 class="card-title">@<%= review.author.username %></h5>
+        <p class="starability-result card-text" data-rating="<%=review.rating %>"></p>
+
+        <p class="card-text"><%= review.comment %></p>
+       
+      </div>
+      
+       
+      <div class="mb-2 mt-2">
+        <% if (curruser) { %>
+        <form method="POST" action="/listing/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" >
+          <button class="btn btn-sm btn-dark ">Delete</button>
+        </form>
+        <% } %>
+      </div> 
+      </div>
+     
+    
+      <% } %>
+    </div>
+  
+    <% } %>
+
+ 
+  </div >
+     
+  </div>
+   <div class="mb-2 col-8 offset-2">
+    <h3>Where you will be</h3>
+     <div id="map"></div>
+   </div>
+
+</div>
+    
+   
+   <script>
+  
+
+// Initialize and add the map
+let map;
+let key=<%- JSON.stringify(process.env.map_API_KEY) %>;
+let city=<%- JSON.stringify(listing.location) %>;
+console.log(city)
+
+
+async function initMap() {
+  let url=`https://maps.gomaps.pro/maps/api/geocode/json?address=${city}&key=${key}`
+   let coordinate=await fetch(url)
+   let rescoordinat=await coordinate.json()
+   console.log(rescoordinat.results[0].geometry.location)
+
+  const position = rescoordinat.results[0].geometry.location;
+
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: position,
+    zoom: 10,
+  });
+  new google.maps.Marker({
+    map: map,
+    position: position,
+    title: "Uluru",
+    label:"A",
+    animation: google.maps.Animation.DROP
+
+  })
+}
+
+window.initMap = initMap;
+   </script>

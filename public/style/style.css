@@ -1,0 +1,106 @@
+body{
+    font-family: "Plus Jakarta Sans", serif !important;
+    display: flex;
+    flex-direction: column;
+   min-height: 100vh;
+
+}
+.container{
+    flex: 1;
+    
+}
+.navbar{
+    height: 5rem;
+    background-color: aliceblue;
+    padding-left: 2rem;
+}
+.fa-compass{
+    color: orangered;
+    font-size: 2rem;
+}
+.nav-link{
+    color: #222222 !important;
+
+}
+.maincontaint{
+    padding-left: 0rem;
+}
+
+/* Footer */
+.f-info-links a{
+    text-decoration: none;
+    color: #222222;
+}
+.f-info-links a:hover{
+    text-decoration: underline;
+    color: blue;
+}
+.f-info-socials ,.f-info-links,.f-info-company {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.f-info-socials i {
+    font-size: 1.2rem;
+    margin-right: 1rem;
+}
+
+
+.f-info{
+    text-align: center;
+    display: flex;
+    background-color: rgb(220, 222, 220);
+    height: 8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+/* card */
+.listing-card{
+    border: none !important;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+.card-img-top{
+    border-radius: 1rem !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+.card-body{
+    padding: 0 !important;
+}
+.listing-link{
+    text-decoration: none;
+}
+.card-img-overlay{
+    opacity: 0;
+}
+.card-img-overlay:hover{
+    opacity: 0.2;
+    background-color: aliceblue;
+}
+/* new.ejs */
+.add-btn{
+    background-color: orangered !important;
+    border: none !important;
+}
+/* edit .ejs */
+.edit-btn{
+    background-color: orangered !important;
+    border: none !important;
+}
+/*shojw.ejs*/
+.buttons{
+   
+    display: flex;
+   
+    gap: 1rem;
+}
+
+/* maps */
+/* Set the size of the div element that contains the map */
+#map {
+    height: 550px; /* The height is 400 pixels */
+    width: 100%; /* The width is the width of the web page */
+    background-color: aqua;
+}
