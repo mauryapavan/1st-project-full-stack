@@ -1,4 +1,6 @@
 const listning=require("../models/listing.js");// isting models
+require("dotenv").config();
+const axios = require("axios");
 
 module.exports.index= async (req,res)=>{
     const allListing= await listning.find({})
@@ -28,19 +30,32 @@ module.exports.creatlistingpost=async (req,res,next)=>{
 
 
   module.exports.show=async (req,res)=>{
-    let {id}=req.params;
-   const  listing= await listning.findById(id)
-   .populate({path:"reviews",populate:{
-  path:"author",
-   }
-  })
-   .populate("owner");
-   //console.log(listing)
-   if(!listing){
-    req.flash("error","Listing you requested for does not exit");
+    let { id } = req.params;
+  const listing = await listning.findById(id)
+    .populate({
+      path: "reviews", populate: {
+        path: "author",
+      }
+    })
+    .populate("owner");
+  //console.log(listing)
+   const response = await axios.get(
+      "https://api.maptiler.com/geocoding/" +
+        encodeURIComponent(listing.location) +
+        ".json",
+      {
+        params: {
+          key: process.env.map_API_KEY, 
+        },
+      }
+    );
+      // console.log(response.data.features[0].geometry.coordinates)
+      //  console.log(response.data.features[0].center)
+  if (!listing) {
+    req.flash("error", "Listing you requested for does not exit");
     res.redirect("/listing")
-   }
-   res.render("./listing/show.ejs",{listing})
+  }
+  res.render("./listing/show.ejs", { listing,coordinates:response.data.features[0].center })
     };
 
 
