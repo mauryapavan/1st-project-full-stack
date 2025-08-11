@@ -111,36 +111,36 @@
     
    
    <script>
-  
+       const mapToken = "<%= process.env.map_API_KEY %>";
+    //listing ke andar double quotes (") ya backslashes (\) aa rahe hain unko escape kare ga.
+     const listing = JSON.parse(
+       decodeURIComponent("<%= encodeURIComponent(JSON.stringify(listing)) %>")
+     );
+    let coordinate=<%- JSON.stringify(coordinates) %>
+     
+    </script>
+   
+   <script>
+     // Initialize and add the map
+     //let map;
+     maptilersdk.config.apiKey = mapToken;
 
-// Initialize and add the map
-let map;
-let key=<%- JSON.stringify(process.env.map_API_KEY) %>;
-let city=<%- JSON.stringify(listing.location) %>;
-console.log(city)
+   const map = new maptilersdk.Map({
+   container: "map", // container ID
+   style: maptilersdk.MapStyle.STREETS,
+   center: coordinate, // starting position [lng,lat]
+   zoom: 15, //starting zoom
+       });
+
+  const marker = new maptilersdk.Marker({ color: "red" })
+  .setLngLat(coordinate) //Listing.geometry.coordinates
+  .setPopup(
+    new maptilersdk.Popup({ offset: 25 }).setHTML(
+      `<h3>${listing.location}</h3><p>Exact location will be provided after booking</p>`
+    )
+  )
+  .addTo(map);
 
 
-async function initMap() {
-  let url=`https://maps.gomaps.pro/maps/api/geocode/json?address=${city}&key=${key}`
-   let coordinate=await fetch(url)
-   let rescoordinat=await coordinate.json()
-   console.log(rescoordinat.results[0].geometry.location)
-
-  const position = rescoordinat.results[0].geometry.location;
-
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: position,
-    zoom: 10,
-  });
-  new google.maps.Marker({
-    map: map,
-    position: position,
-    title: "Uluru",
-    label:"A",
-    animation: google.maps.Animation.DROP
-
-  })
-}
-
-window.initMap = initMap;
    </script>
+
